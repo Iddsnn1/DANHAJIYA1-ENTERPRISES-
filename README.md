@@ -1,0 +1,690 @@
+<!DOCTYPE html>
+<html lang="ha">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DANHAJIYA 1 - Airtime & Data</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <style>
+        :root {
+            --pi-green: #4ade80;
+            --pi-dark: #0f172a;
+            --pi-accent: #22c55e;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', system-ui, sans-serif;
+            background: linear-gradient(135deg, #0f172a 0%, #1e2937 100%);
+            color: #e2e8f0;
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+        
+        .container {
+            display: flex;
+            min-height: 100vh;
+        }
+        
+        /* Sidebar */
+        .sidebar {
+            width: 260px;
+            background: #1e2937;
+            border-right: 1px solid #334155;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            position: fixed;
+            height: 100vh;
+            z-index: 100;
+        }
+        
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 15px 0;
+            border-bottom: 1px solid #334155;
+            margin-bottom: 30px;
+        }
+        
+        .logo i {
+            font-size: 32px;
+            color: var(--pi-green);
+        }
+        
+        .logo h1 {
+            font-size: 20px;
+            font-weight: 700;
+            line-height: 1.2;
+        }
+        
+        .nav {
+            flex: 1;
+        }
+        
+        .nav a {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 14px 18px;
+            color: #cbd5e1;
+            text-decoration: none;
+            border-radius: 8px;
+            margin-bottom: 6px;
+            transition: all 0.3s;
+        }
+        
+        .nav a:hover, .nav a.active {
+            background: #334155;
+            color: white;
+        }
+        
+        .nav a i {
+            width: 20px;
+        }
+        
+        .user-info {
+            padding-top: 20px;
+            border-top: 1px solid #334155;
+        }
+        
+        /* Main Content */
+        .main {
+            flex: 1;
+            margin-left: 260px;
+            padding: 30px;
+        }
+        
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+        }
+        
+        .header h2 {
+            font-size: 28px;
+        }
+        
+        .balance-card {
+            background: linear-gradient(135deg, #22c55e, #4ade80);
+            color: #0f172a;
+            border-radius: 16px;
+            padding: 24px;
+            margin-bottom: 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .balance {
+            font-size: 32px;
+            font-weight: 700;
+        }
+        
+        /* Cards */
+        .cards {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 20px;
+            margin-bottom: 40px;
+        }
+        
+        .card {
+            background: #1e2937;
+            border-radius: 16px;
+            padding: 24px;
+            border: 1px solid #334155;
+            transition: transform 0.3s;
+        }
+        
+        .card:hover {
+            transform: translateY(-8px);
+        }
+        
+        /* Network buttons */
+        .network-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
+            gap: 15px;
+        }
+        
+        .network-btn {
+            background: #334155;
+            border: none;
+            padding: 16px 12px;
+            border-radius: 12px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s;
+            color: white;
+        }
+        
+        .network-btn:hover, .network-btn.active {
+            background: var(--pi-green);
+            color: #0f172a;
+            transform: scale(1.05);
+        }
+        
+        /* Form */
+        .form-group {
+            margin-bottom: 20px;
+        }
+        
+        label {
+            display: block;
+            margin-bottom: 8px;
+            color: #94a3b8;
+        }
+        
+        input, select {
+            width: 100%;
+            padding: 14px;
+            background: #334155;
+            border: 1px solid #475569;
+            border-radius: 8px;
+            color: white;
+        }
+        
+        button {
+            background: var(--pi-green);
+            color: #0f172a;
+            border: none;
+            padding: 14px 28px;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            width: 100%;
+            font-size: 16px;
+        }
+        
+        /* Admin Dashboard */
+        .admin-section {
+            display: none;
+        }
+        
+        .admin-section.active {
+            display: block;
+        }
+        
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            background: #1e2937;
+            border-radius: 12px;
+            overflow: hidden;
+        }
+        
+        th, td {
+            padding: 16px;
+            text-align: left;
+            border-bottom: 1px solid #334155;
+        }
+        
+        th {
+            background: #334155;
+        }
+        
+        /* Tabs */
+        .tabs {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 25px;
+            border-bottom: 1px solid #334155;
+        }
+        
+        .tab {
+            padding: 12px 24px;
+            cursor: pointer;
+            border-bottom: 3px solid transparent;
+        }
+        
+        .tab.active {
+            color: var(--pi-green);
+            border-bottom: 3px solid var(--pi-green);
+        }
+        
+        /* Toast */
+        .toast {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background: #22c55e;
+            color: #0f172a;
+            padding: 16px 24px;
+            border-radius: 8px;
+            display: none;
+            z-index: 1000;
+            box-shadow: 0 10px 15px rgba(0,0,0,0.3);
+        }
+        
+        /* Responsive */
+        @media (max-width: 768px) {
+            .sidebar {
+                width: 80px;
+            }
+            .main {
+                margin-left: 80px;
+            }
+            .nav span {
+                display: none;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Sidebar -->
+        <div class="sidebar">
+            <div class="logo">
+                <i class="fas fa-wifi"></i>
+                <h1>DANHAJIYA 1<br>ENTERPRISES</h1>
+            </div>
+            
+            <div class="nav">
+                <a href="#" onclick="navigateTo('home')" class="active" id="nav-home">
+                    <i class="fas fa-home"></i>
+                    <span>Gida</span>
+                </a>
+                <a href="#" onclick="navigateTo('airtime')" id="nav-airtime">
+                    <i class="fas fa-phone"></i>
+                    <span>Airtime</span>
+                </a>
+                <a href="#" onclick="navigateTo('data')" id="nav-data">
+                    <i class="fas fa-database"></i>
+                    <span>Data</span>
+                </a>
+                <a href="#" onclick="navigateTo('wallet')" id="nav-wallet">
+                    <i class="fas fa-wallet"></i>
+                    <span>Pi Wallet</span>
+                </a>
+                <a href="#" onclick="navigateTo('admin')" id="nav-admin">
+                    <i class="fas fa-user-shield"></i>
+                    <span>Admin Dashboard</span>
+                </a>
+            </div>
+            
+            <div class="user-info">
+                <div style="display: flex; align-items: center; gap: 12px;">
+                    <div style="width: 45px; height: 45px; background: #22c55e; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: bold; color: #0f172a;">
+                        D1
+                    </div>
+                    <div>
+                        <div style="font-weight: 600;">DANHAJIYA 1</div>
+                        <div style="font-size: 13px; color: #94a3b8;">Pioneer • Verified</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Main Content -->
+        <div class="main">
+            <!-- HOME -->
+            <div id="home-section">
+                <div class="header">
+                    <h2>Barka da zuwa DANHAJIYA 1 ENTERPRISES <i class="fas fa-wifi"></i></h2>
+                    <div style="display: flex; align-items: center; gap: 15px;">
+                        <div onclick="connectPiWallet()" style="background: #334155; padding: 10px 20px; border-radius: 9999px; cursor: pointer; font-size: 14px;">
+                            <i class="fas fa-plug"></i> Haɗa Pi Wallet
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="balance-card">
+                    <div>
+                        <div style="opacity: 0.9; font-size: 15px;">Pi Balance</div>
+                        <div class="balance" id="pi-balance">1248.75 π</div>
+                    </div>
+                    <div style="text-align: right;">
+                        <div style="font-size: 48px; opacity: 0.2;"><i class="fas fa-coins"></i></div>
+                    </div>
+                </div>
+                
+                <div class="cards">
+                    <div class="card">
+                        <h3><i class="fas fa-phone"></i> Airtime</h3>
+                        <p style="margin: 15px 0; color: #94a3b8;">Sayar da Airtime cikin sauri</p>
+                        <button onclick="navigateTo('airtime')">Fara Sayen Airtime</button>
+                    </div>
+                    <div class="card">
+                        <h3><i class="fas fa-database"></i> Mobile Data</h3>
+                        <p style="margin: 15px 0; color: #94a3b8;">Sayen Data na kowane Network</p>
+                        <button onclick="navigateTo('data')">Fara Sayen Data</button>
+                    </div>
+                </div>
+                
+                <h3 style="margin-bottom: 15px;">Recent Transactions</h3>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Service</th>
+                            <th>Number</th>
+                            <th>Amount</th>
+                            <th>Status</th>
+                        </tr>
+                    </thead>
+                    <tbody id="recent-table">
+                        <!-- JS populated -->
+                    </tbody>
+                </table>
+            </div>
+            
+            <!-- AIRTIME SECTION -->
+            <div id="airtime-section" style="display: none;">
+                <h2>Sayen Airtime - DANHAJIYA 1</h2>
+                <div style="max-width: 600px; margin-top: 30px;">
+                    <div class="form-group">
+                        <label>Network</label>
+                        <div class="network-grid" id="airtime-networks">
+                            <!-- JS populated -->
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label>Lambar wayar</label>
+                        <input type="tel" id="airtime-phone" placeholder="08012345678" value="08098765432">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label>Adadin Airtime (₦)</label>
+                        <select id="airtime-amount">
+                            <option value="100">₦100</option>
+                            <option value="200">₦200</option>
+                            <option value="500" selected>₦500</option>
+                            <option value="1000">₦1,000</option>
+                            <option value="2000">₦2,000</option>
+                        </select>
+                    </div>
+                    
+                    <button onclick="buyAirtime()">Sayar da Airtime - Pay with π</button>
+                </div>
+            </div>
+            
+            <!-- DATA SECTION -->
+            <div id="data-section" style="display: none;">
+                <h2>Sayen Mobile Data - DANHAJIYA 1</h2>
+                <div style="max-width: 600px; margin-top: 30px;">
+                    <div class="form-group">
+                        <label>Network</label>
+                        <div class="network-grid" id="data-networks">
+                            <!-- JS populated -->
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label>Lambar wayar</label>
+                        <input type="tel" id="data-phone" placeholder="08012345678" value="08098765432">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label>Package</label>
+                        <select id="data-package">
+                            <option value="500mb">500MB - ₦250</option>
+                            <option value="1gb" selected>1GB - ₦450</option>
+                            <option value="2gb">2GB - ₦850</option>
+                            <option value="5gb">5GB - ₦1,800</option>
+                        </select>
+                    </div>
+                    
+                    <button onclick="buyData()">Sayar da Data - Pay with π</button>
+                </div>
+            </div>
+            
+            <!-- WALLET SECTION -->
+            <div id="wallet-section" style="display: none;">
+                <h2>Pi Testnet Wallet</h2>
+                <div class="balance-card" style="margin-top: 20px;">
+                    <div>
+                        <div>Pi Balance</div>
+                        <div class="balance" id="wallet-balance">1248.75 π</div>
+                    </div>
+                    <button onclick="simulatePiPayment()" style="background: white; width: auto; padding: 12px 30px;">Send Test π</button>
+                </div>
+                
+                <div style="background: #1e2937; padding: 25px; border-radius: 16px; margin-top: 25px;">
+                    <h3>Wallet Info</h3>
+                    <p><strong>Address:</strong> <span style="font-family: monospace; color: var(--pi-green);">pi_testnet_7x9kPqR2mN8vL3tW4xY5zA6bC7dE8fG9h</span></p>
+                    <p><strong>Status:</strong> <span style="color: #4ade80;">Connected to Pi Testnet</span></p>
+                </div>
+            </div>
+            
+            <!-- ADMIN DASHBOARD -->
+            <div id="admin-section" class="admin-section">
+                <div class="header">
+                    <h2>Admin Dashboard - DANHAJIYA 1 ENTERPRISES</h2>
+                    <div style="background: #334155; padding: 8px 16px; border-radius: 9999px; font-size: 14px;">
+                        Total Transactions: <strong id="total-tx">24</strong>
+                    </div>
+                </div>
+                
+                <div class="tabs">
+                    <div class="tab active" onclick="switchAdminTab(0)">All Transactions</div>
+                    <div class="tab" onclick="switchAdminTab(1)">Users</div>
+                    <div class="tab" onclick="switchAdminTab(2)">Reports</div>
+                </div>
+                
+                <table id="admin-table">
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>User</th>
+                            <th>Service</th>
+                            <th>Amount</th>
+                            <th>Status</th>
+                            <th>Time</th>
+                        </tr>
+                    </thead>
+                    <tbody id="admin-tbody">
+                        <!-- JS populated -->
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Toast -->
+    <div id="toast" class="toast"></div>
+    
+    <script>
+        // Sample data
+        let transactions = [
+            {id: "TX001", service: "Airtime", number: "08098765432", amount: "500", status: "Success", time: "Just now"},
+            {id: "TX002", service: "Data", number: "08123456789", amount: "450", status: "Success", time: "2 hours ago"},
+            {id: "TX003", service: "Airtime", number: "07011223344", amount: "1000", status: "Success", time: "Yesterday"},
+        ];
+        
+        let networks = [
+            {name: "MTN", color: "#ffcc00"},
+            {name: "Airtel", color: "#e30613"},
+            {name: "Glo", color: "#00a651"},
+            {name: "9mobile", color: "#3b5998"}
+        ];
+        
+        let currentUser = "DANHAJIYA 1";
+        let piBalance = 1248.75;
+        
+        // Render networks
+        function renderNetworks(containerId) {
+            const container = document.getElementById(containerId);
+            container.innerHTML = '';
+            networks.forEach(net => {
+                const div = document.createElement('div');
+                div.className = 'network-btn';
+                div.innerHTML = `<strong>${net.name}</strong>`;
+                div.onclick = () => {
+                    document.querySelectorAll(`#${containerId} .network-btn`).forEach(b => b.classList.remove('active'));
+                    div.classList.add('active');
+                };
+                container.appendChild(div);
+            });
+        }
+        
+        // Render recent transactions
+        function renderRecentTransactions() {
+            const tbody = document.getElementById('recent-table');
+            tbody.innerHTML = '';
+            transactions.forEach(tx => {
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td>${tx.service}</td>
+                    <td>${tx.number}</td>
+                    <td>₦${tx.amount}</td>
+                    <td><span style="color: #4ade80;">${tx.status}</span></td>
+                `;
+                tbody.appendChild(row);
+            });
+        }
+        
+        // Render admin table
+        function renderAdminTable() {
+            const tbody = document.getElementById('admin-tbody');
+            tbody.innerHTML = '';
+            transactions.forEach((tx, index) => {
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td>${tx.id}</td>
+                    <td>${currentUser}</td>
+                    <td>${tx.service}</td>
+                    <td>₦${tx.amount}</td>
+                    <td><span style="color: #4ade80;">${tx.status}</span></td>
+                    <td>${tx.time}</td>
+                `;
+                tbody.appendChild(row);
+            });
+        }
+        
+        function navigateTo(section) {
+            document.getElementById('home-section').style.display = 'none';
+            document.getElementById('airtime-section').style.display = 'none';
+            document.getElementById('data-section').style.display = 'none';
+            document.getElementById('wallet-section').style.display = 'none';
+            document.getElementById('admin-section').classList.remove('active');
+            
+            if (section === 'home') {
+                document.getElementById('home-section').style.display = 'block';
+            } else if (section === 'airtime') {
+                document.getElementById('airtime-section').style.display = 'block';
+            } else if (section === 'data') {
+                document.getElementById('data-section').style.display = 'block';
+            } else if (section === 'wallet') {
+                document.getElementById('wallet-section').style.display = 'block';
+            } else if (section === 'admin') {
+                document.getElementById('admin-section').classList.add('active');
+                renderAdminTable();
+            }
+            
+            document.querySelectorAll('.nav a').forEach(link => {
+                link.classList.remove('active');
+                if (link.id === `nav-${section}`) link.classList.add('active');
+            });
+        }
+        
+        function showToast(message) {
+            const toast = document.getElementById('toast');
+            toast.textContent = message;
+            toast.style.display = 'block';
+            setTimeout(() => {
+                toast.style.display = 'none';
+            }, 3500);
+        }
+        
+        function buyAirtime() {
+            const phone = document.getElementById('airtime-phone').value;
+            const amount = document.getElementById('airtime-amount').value;
+            
+            if (!phone) {
+                showToast("Shigar da lambar waya!");
+                return;
+            }
+            
+            piBalance -= parseInt(amount) / 8;
+            document.getElementById('pi-balance').textContent = piBalance.toFixed(2) + " π";
+            document.getElementById('wallet-balance').textContent = piBalance.toFixed(2) + " π";
+            
+            transactions.unshift({
+                id: "TX" + String(Math.floor(Math.random()*900)+100),
+                service: "Airtime",
+                number: phone,
+                amount: amount,
+                status: "Success",
+                time: "Just now"
+            });
+            
+            showToast(`✅ Airtime ₦${amount} ya samu ga ${phone}!`);
+            renderRecentTransactions();
+            renderAdminTable();
+        }
+        
+        function buyData() {
+            const phone = document.getElementById('data-phone').value;
+            const pkg = document.getElementById('data-package').value;
+            
+            if (!phone) {
+                showToast("Shigar da lambar waya!");
+                return;
+            }
+            
+            const priceMap = {"500mb": 250, "1gb": 450, "2gb": 850, "5gb": 1800};
+            const amount = priceMap[pkg];
+            
+            piBalance -= amount / 8;
+            document.getElementById('pi-balance').textContent = piBalance.toFixed(2) + " π";
+            document.getElementById('wallet-balance').textContent = piBalance.toFixed(2) + " π";
+            
+            transactions.unshift({
+                id: "TX" + String(Math.floor(Math.random()*900)+100),
+                service: "Data",
+                number: phone,
+                amount: amount,
+                status: "Success",
+                time: "Just now"
+            });
+            
+            showToast(`✅ ${pkg.toUpperCase()} Data ya samu ga ${phone}!`);
+            renderRecentTransactions();
+            renderAdminTable();
+        }
+        
+        function connectPiWallet() {
+            showToast("✅ Pi Wallet haɗuwa ta yi! (Testnet)");
+        }
+        
+        function simulatePiPayment() {
+            showToast("Pi Testnet transfer simulated. Balance updated.");
+            piBalance += 50;
+            document.getElementById('pi-balance').textContent = piBalance.toFixed(2) + " π";
+            document.getElementById('wallet-balance').textContent = piBalance.toFixed(2) + " π";
+        }
+        
+        function switchAdminTab(tab) {
+            document.querySelectorAll('.tab').forEach((t, i) => {
+                t.classList.toggle('active', i === tab);
+            });
+            renderAdminTable();
+        }
+        
+        // Initialize
+        window.onload = function() {
+            renderNetworks('airtime-networks');
+            renderNetworks('data-networks');
+            renderRecentTransactions();
+            renderAdminTable();
+            
+            setTimeout(() => {
+                const firstAir = document.querySelector('#airtime-networks .network-btn');
+                if (firstAir) firstAir.classList.add('active');
+                const firstData = document.querySelector('#data-networks .network-btn');
+                if (firstData) firstData.classList.add('active');
+            }, 300);
+            
+            showToast("Barka da zuwa DANHAJIYA 1 ENTERPRISES! 🚀");
+        };
+    </script>
+</body>
+</html>
